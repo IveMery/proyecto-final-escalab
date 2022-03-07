@@ -43,7 +43,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: [".js",".jsx"],
+    extensions: [".js"],
   },
   performance: {
     hints: process.env.NODE_ENV === "production" ? "error" : false,
