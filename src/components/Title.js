@@ -1,11 +1,25 @@
-import React from 'react'
-import { Typography } from '@material-ui/core'
+import React from "react";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core";
+import ErrorBoundary from "../ErrorBoundary";
 
 const Title = (props) => {
-   const {children ,variant,component} = props
-  return (
-  <Typography {...props} >{children}</Typography>
-  )
-}
+  const useStyles = makeStyles({
+    title: {
+      marginTop: 25,
+      fontFamily: "Chewy",
+    },
+  });
+  const classes = useStyles();
 
-export default Title
+  const { children } = props;
+  return (
+    <ErrorBoundary>
+      <Typography {...props} className={classes.title}>
+        {children}
+      </Typography>
+    </ErrorBoundary>
+  );
+};
+
+export default Title;

@@ -2,33 +2,39 @@ import React, { useContext } from "react";
 import Characters from "./Characters";
 import Loader from "./Loader";
 import { HeroContext } from "../contexts/HeroContext";
-import { Grid } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
 import propTypes from "prop-types";
+import Error from "./Error";
 
 const ListCharacters = ({ data }) => {
-  const { loading } = useContext(HeroContext);
+  const { loading, error } = useContext(HeroContext);
 
   return (
-    <Grid container direction="row" justifyContent="center">
+    <Grid
+      container
+      direction="row"
+      justifyContent="center"
+      style={{ paddingBottom: "45px" }}
+    >
       {loading ? (
         <Loader />
       ) : !data ? (
-        <div>No encontramos heroes con ese nombre</div>
+        <h3>No encontramos heroes con ese nombre</h3>
       ) : (
         <>
           {data?.map((characters) => {
-            //render props pasar datos del componente padre al componente hijo, de forma unidireccional
             return <Characters key={characters.id} characters={characters} />;
           })}
         </>
       )}
+      {error && <Error />}
     </Grid>
   );
 };
 
 ListCharacters.propTypes = {
- loading: propTypes.bool,
- data: propTypes.arrayOf(propTypes.object),
+  loading: propTypes.bool,
+  data: propTypes.object,
 };
 
 export default ListCharacters;

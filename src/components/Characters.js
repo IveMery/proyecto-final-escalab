@@ -1,6 +1,5 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext } from "react";
 import Modal from "./Modal";
-import useGetCharacters from "../custom-hooks/useGetCharacters";
 import imagehero from "../assets/images/imagehero.jpg";
 import { HeroContext } from "../contexts/HeroContext";
 import Card from "@material-ui/core/Card";
@@ -14,53 +13,44 @@ import ButtonPrimary from "./ButtonPrimary";
 import { ButtonsContext } from "../contexts/ButtonsContext";
 import useModal from "../custom-hooks/useModal";
 import propTypes from "prop-types";
-
 import DeleteIcon from "@material-ui/icons/Delete";
+import useGetCharacters from "../custom-hooks/useGetCharacters";
+import { characterUrl } from "../constants";
+import ErrorBoundary from "../ErrorBoundary";
 
-const Characters = ({ characters, props }) => {
+const Characters = ({ characters }) => {
   const useStyles = makeStyles({
     card: {
       margin: 10,
-      // width: "50%",
       color: "white",
-      background: "rgb(54, 57, 63)",
+      background: "#E83A19",
       border: "none",
-      //   fontFamily: 'Varela Round',
+    },
+    media: {
+      height: 320,
+      width: 320,
+      overflow: "hidden",
+      transition: "all 0.2s ease-in",
+      "&:hover": {
+        transform: " scale(1.1) ",
+      },
     },
     info: {
       margin: 5,
       marginTop: 2,
-      // background: "violet",
+      fontFamily: "Russo One",
     },
   });
   const classes = useStyles();
   const { name, id, image } = characters;
-  const { selectedHero, heroes, deleteHero } = useContext(HeroContext);
-  const { show, setShow } = useContext(ButtonsContext);
+  const { selectedHero, heroes, deleteHeroAlert } = useContext(HeroContext);
+  const { show } = useContext(ButtonsContext);
   const { open, openModal, closeModal } = useModal();
 
-  // useEffect(() => {
-  //   setShow(true);
-  // }, []);
-  // const { hero } = useGetCharacters(
-  //   `https://superheroapi.com/api.php/1187317678426591/${id}`
-  // );
-
-  const [hero, setHero] = useState([]);
-
-  useEffect(() => {
-    fetch(`https://superheroapi.com/api.php/1187317678426591/${id}`)
-      .then((res) => res.json())
-      .then((data) => setHero(data));
-  }, []);
-
-  //necesito un componente donde mostrar los puntajes puede ser una tabla y agregarlo al componente de  team para visualizar todo
-  //necesito poder visualizar  los puntajes
-  //los puntajes deben convertirse a numeros por que vienen en string
-  //al darle click y agregar un heroe necesito sumar los puntajes a la tabla
-  //si se elimina un heroes necesito restar los puntajes
+  const { hero } = useGetCharacters(`${characterUrl + id}`);
 
   return (
+    <ErrorBoundary>
     <>
       <Card className={classes.card}>
         <CardMedia
@@ -69,12 +59,13 @@ const Characters = ({ characters, props }) => {
           height="250"
           name={name}
           alt={name}
+          className={classes.media}
           onError={(e) => {
             e.target.src = imagehero;
           }}
         />
         <CardContent>
-          <Typography gutterBottom variant="h5">
+          <Typography gutterBottom variant="h5" className={classes.info}>
             {name}
           </Typography>
           {show ? (
@@ -95,7 +86,7 @@ const Characters = ({ characters, props }) => {
                 color="secondary"
                 onClick={openModal}
               >
-                Ver mAs{" "}
+                Ver más{" "}
               </ButtonPrimary>
             </>
           ) : (
@@ -103,7 +94,8 @@ const Characters = ({ characters, props }) => {
               startIcon={<DeleteIcon />}
               variant="contained"
               color="secondary"
-              onClick={() => deleteHero(id)}
+              className={classes.info}
+              onClick={() => deleteHeroAlert(id)}
             >
               Eliminar
             </ButtonPrimary>
@@ -112,6 +104,7 @@ const Characters = ({ characters, props }) => {
       </Card>
       {open && <Modal hero={hero} closeModal={closeModal} open={open} />}
     </>
+    </ErrorBoundary>
   );
 };
 
@@ -122,7 +115,7 @@ Characters.propTypes = {
   show: propTypes.bool,
   selectedHero: propTypes.func,
   heroes: propTypes.array,
-  deleteHero: propTypes.func,
+  deleteHeroAlert: propTypes.func,
   openModal: propTypes.func,
   closeModal: propTypes.func,
 };

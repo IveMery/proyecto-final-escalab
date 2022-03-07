@@ -2,29 +2,21 @@ import React, { useState, useEffect } from "react";
 
 const useGetCharacters = (url) => {
   const [hero, setHero] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  const getData = () => {
+  useEffect(() => {
     try {
       fetch(url)
         .then((res) => res.json())
         .then((data) => {
           setHero(data);
-          setLoading(false);
         });
     } catch (error) {
-      console.log(error.mesagge);
-      setLoading(false);
+      console.error(error);
     }
-  };
-
-  useEffect(() => {
-    getData();
-  });
+  }, [url]);
 
   return {
     hero,
-    loading,
   };
 };
 

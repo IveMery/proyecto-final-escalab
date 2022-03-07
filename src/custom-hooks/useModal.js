@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 
 const useModal = () => {
   const [open, setOpen] = useState(false);
@@ -9,7 +9,7 @@ const useModal = () => {
   return {
     open,
     openModal,
-    closeModal
+    closeModal,
   };
 };
 

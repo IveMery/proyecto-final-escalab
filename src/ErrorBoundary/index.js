@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import ButtonPrimary from "../components/ButtonPrimary";
+import HomeIcon from "@material-ui/icons/Home";
+import  Grid  from "@material-ui/core/Grid";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -15,12 +17,18 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div>
-          <p>oops! Tenemos un Problema</p>{" "}
+        <Grid container direction="row" justifyContent="center">
+          <p>Oops! Tenemos un Problema</p>
           <Link to="/">
-            <ButtonPrimary>Inicio</ButtonPrimary>
+            <ButtonPrimary
+              startIcon={<HomeIcon />}
+              variant="contained"
+              color="primary"
+            >
+              Inicio
+            </ButtonPrimary>
           </Link>
-        </div>
+        </Grid>
       );
     }
 

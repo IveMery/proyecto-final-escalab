@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import herocharging from "../assets/animation/herocharging.json";
 import lottie from "lottie-web";
+import ErrorBoundary from "../ErrorBoundary";
 
 const Loader = () => {
   useEffect(() => {
@@ -12,11 +13,13 @@ const Loader = () => {
       animationData: herocharging,
     });
   });
-console.log("me estoy renderizando")
+
   return (
-    <div className="loader__container" style={{ width: 200, height: 200 }}>
-      <div id="hero-loading"></div>
-    </div>
+    <ErrorBoundary>
+      <div className="loader__container" style={{ width: 200, height: 200 }}>
+        <div id="hero-loading"></div>
+      </div>
+    </ErrorBoundary>
   );
 };
 

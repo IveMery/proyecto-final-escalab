@@ -1,27 +1,30 @@
+import React from "react";
 import { createContext, useState, useEffect } from "react";
+import swal from "sweetalert";
+import { url } from "../constants/index";
 
 const HeroContext = createContext();
 const HeroContextProvider = ({ children }) => {
   const [data, setData] = useState([]);
   const [query, setQuery] = useState("");
   const [value, setValue] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [add, setAdd] = useState(false);
   const [error, setError] = useState(false);
   const [eliminated, setEliminated] = useState(false);
 
   const getData = () => {
+    setLoading(true);
     try {
-      fetch(
-        `https://www.superheroapi.com/api.php/1187317678426591/search/${query}`
-      )
+      fetch(`${url + query}`)
         .then((response) => response.json())
         .then((data) => {
           setData(data.results);
           setLoading(false);
+          setError(false);
         });
     } catch (error) {
-      console.log(error);
+      setError(true);
       setLoading(false);
     }
   };
@@ -36,6 +39,15 @@ const HeroContextProvider = ({ children }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (value === "") {
+      swal({
+        title: "Escribe algún nombre por ejemplo: 'Spider' ",
+        icon: "warning",
+        button: "Aceptar",
+        timer: 2800,
+      });
+    } else {
+    }
     setQuery(value);
     setValue("");
   };
@@ -47,7 +59,12 @@ const HeroContextProvider = ({ children }) => {
   const selectedHero = (hero, heroId) => {
     const currentHero = heroes.find((hero) => hero.id === heroId);
     if (currentHero) {
-      alert("El heroe ya esta agregado");
+      swal({
+        title: "El héroe o villano ya está agregado",
+        icon: "warning",
+        button: "Aceptar",
+        timer: 1500,
+      });
       return;
     }
     if (heroes.length <= 5) {
@@ -55,7 +72,12 @@ const HeroContextProvider = ({ children }) => {
       localStorage.setItem("heroes", JSON.stringify(heroes));
       setAdd(!add);
     } else {
-      alert("No puedes agregar mas de 6 heroes");
+      swal({
+        title: "No puedes agregar más de 6 héroes o villanos",
+        icon: "warning",
+        button: "Aceptar",
+        timer: 2800,
+      });
     }
   };
 
@@ -71,8 +93,24 @@ const HeroContextProvider = ({ children }) => {
     deleteHero();
   }, []);
 
+  const deleteHeroAlert = (heroId) => {
+    swal({
+      title: "Eliminar",
+      text: "Estás seguro de que quieres eliminar el personaje?",
+      icon: "warning",
+      buttons: ["No", "Si"],
+    }).then((response) => {
+      if (response) {
+        swal({
+          text: "El personaje se ha eliminado con éxito",
+          icon: "success",
+        });
+        deleteHero(heroId);
+      }
+    });
+  };
+
   return (
-    //patron de diseno Provider
     <HeroContext.Provider
       value={{
         data,
@@ -84,6 +122,8 @@ const HeroContextProvider = ({ children }) => {
         deleteHero,
         loading,
         heroes,
+        deleteHeroAlert,
+        error,
       }}
     >
       {children}

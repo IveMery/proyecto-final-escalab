@@ -1,0 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Chewy&family=Russo+One&display=swap");
+
+html {
+  min-height: 100%;
+  position: relative;
+}
+body {
+  margin: 0%;
+  padding: 0%;
+  background-color: #151d3b;
+  font-family: "Chewy", cursive;
+  color: aliceblue;
+}
