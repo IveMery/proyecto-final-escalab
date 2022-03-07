@@ -5,7 +5,6 @@ import Grid from "@material-ui/core/Grid";
 import ErrorBoundary from "../ErrorBoundary";
 
 const PageNotFound = () => {
-  console.log("me renderizo desde page not found");
   useEffect(() => {
     lottie.loadAnimation({
       container: document.getElementById("spidernotfound"),
